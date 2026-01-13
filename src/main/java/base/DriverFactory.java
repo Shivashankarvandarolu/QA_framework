@@ -2,28 +2,28 @@ package base;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
 
+import io.cucumber.java.ParameterType;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class DriverFactory {
-
 	private static ThreadLocal<WebDriver> driver = new ThreadLocal<>();
 
 	public static WebDriver initDriver(String browser) {
+		WebDriver driver = null;
 		if (browser.equalsIgnoreCase("chrome")) {
-			WebDriverManager.chromedriver().setup();
-			driver.set(new ChromeDriver());
-
+			driver = new ChromeDriver();
 		} else if (browser.equalsIgnoreCase("firefox")) {
-			WebDriverManager.firefoxdriver().setup();
-			driver.set(new FirefoxDriver());
-		} else {
-			throw new RuntimeException("Browser not supported: " + browser);
+			driver = new FirefoxDriver();
+		} else if (browser.equalsIgnoreCase("edge")) {
+			driver = new EdgeDriver();
 		}
-
-		getDriver().manage().window().maximize();
-		return getDriver();
+		return driver;
 	}
 
 	public static void setDriver(WebDriver webDriver) {
@@ -40,5 +40,4 @@ public class DriverFactory {
 			driver.remove();
 		}
 	}
-
 }
