@@ -1,35 +1,47 @@
-package StepDefinitions;
+package stepDefinitions;
+
+import static org.testng.Assert.assertTrue;
 
 import java.time.Duration;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
 import base.DriverFactory;
+import base.Hooks;
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import pages.HomePage;
 import pages.LoginPage;
 import pages.SignUp_Loginpage;
-import pages.signupPage;
+import pages.SignupPage;
 
 public class LoginStepDef {
 
-	private WebDriver driver = DriverFactory.getDriver();
+	private WebDriver driver;
 	private LoginPage login = new LoginPage();
 	private DriverFactory driverFactory = new DriverFactory();
 	private SignUp_Loginpage slpage = new SignUp_Loginpage(DriverFactory.getDriver());
 	private HomePage home = new HomePage(DriverFactory.getDriver());
-	private signupPage spage = new signupPage(DriverFactory.getDriver());
+	private SignupPage spage = new SignupPage(DriverFactory.getDriver());
 	private static final Logger logger = LogManager.getLogger(LoginStepDef.class);
+
+	public LoginStepDef() {
+		this.driver = DriverFactory.getDriver();
+		// ✅ fetch driver after Hooks has run
+
+	}
 
 	@When("I open the '(.+)' browser")
 	public void i_open_the_browser(String browser) {
@@ -112,8 +124,101 @@ public class LoginStepDef {
 	}
 
 	@And("^I entered details for creating an account$")
-	public void i_entered_details_for_creating_an_account() {
+	public void i_entered_details_for_creating_an_account(DataTable datatable) {
 
+		Map<String, String> data = datatable.asMap(String.class, String.class);
+
+		// Title selection
+		if (data.get("title").equalsIgnoreCase("Mr")) {
+			spage.mrRadioBtn.click();
+		} else {
+			spage.mrsRadioBtn.click();
+		}
+
+		// Password
+		spage.passwordTxtbox.sendKeys(data.get("password"));
+
+		// Date of Birth
+		new Select(spage.day_dropdown).selectByValue(data.get("day"));
+		new Select(spage.month_dropdown).selectByVisibleText(data.get("month"));
+		new Select(spage.year_dropdown).selectByVisibleText(data.get("year"));
+
+		// Checkboxes
+		if (!spage.signUpForNewsLetter_Checkbox.isSelected()) {
+			spage.signUpForNewsLetter_Checkbox.click();
+		}
+
+		if (!spage.Receivespecialoffer_checkbox.isSelected()) {
+			spage.Receivespecialoffer_checkbox.click();
+		}
+
+		((JavascriptExecutor) DriverFactory.getDriver()).executeScript("arguments[0].scrollIntoView(true);",
+				spage.firstName_txtbox);
+
+		// Address Details
+		spage.firstName_txtbox.sendKeys(data.get("firstName"));
+		spage.lastName_txtbox.sendKeys(data.get("lastName"));
+		spage.company_txtbox.sendKeys(data.get("company"));
+		((JavascriptExecutor) DriverFactory.getDriver()).executeScript("arguments[0].scrollIntoView(true);",
+				spage.address1_txtbox);
+		spage.address1_txtbox.sendKeys(data.get("address1"));
+		spage.address2_txtbox.sendKeys(data.get("address2"));
+
+		// Country
+		new Select(spage.countryDropdown).selectByVisibleText(data.get("country"));
+
+		// State / City / Zip / Mobile
+		spage.state_txtbox.sendKeys(data.get("state"));
+		spage.city_txtbox.sendKeys(data.get("city"));
+		((JavascriptExecutor) DriverFactory.getDriver()).executeScript("arguments[0].scrollIntoView(true);",
+				spage.zipcode_txtbox);
+		spage.zipcode_txtbox.sendKeys(data.get("zipcode"));
+		spage.mobile_number_txtbox.sendKeys(data.get("mobile"));
+
+		spage.createAccount_button.click();
+	}
+
+	@Then("^verify the account creation is completed or not$")
+	public void verify_the_account_creation_is_completed_or_not() throws InterruptedException {
+		Assert.assertTrue(spage.accountCreated_txt.isDisplayed());
+		Assert.assertEquals("ACCOUNT CREATED!", spage.accountCreated_txt.getText(), "Not Matching");
+		Assert.assertTrue(spage.congratulation_txt.isDisplayed(), "Congratulation message is not showing");
+		Assert.assertTrue(spage.continueBtn.isDisplayed());
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		js.executeScript("arguments[0].click()", spage.continueBtn);
+		// spage.continueBtn.click();
+		Thread.sleep(1000);
+	}
+
+	@And("^I should be able to see the name '(.+)'$")
+	public void i_should_be_able_to_see_the_name(String expectedName) throws InterruptedException {
+
+		Thread.sleep(1000);
+
+		Assert.assertTrue(spage.logoutBtn.isDisplayed());
+
+		Assert.assertTrue(spage.deleteaccount_Btn.isDisplayed());
+
+		Assert.assertTrue(spage.userName.isDisplayed());
+
+		if (spage.userName.getText().contains(expectedName)) {
+			logger.info("Matching");
+		} else {
+			logger.info("Not Matching");
+		}
+
+	}
+
+	@And("^I enter password '(.+)'$")
+	public void I_enter_password(String password) {
+		Assert.assertTrue(slpage.login_password.isDisplayed() && slpage.login_password.isEnabled());
+		slpage.login_password.sendKeys(password);
+	}
+
+	@Then("^I click on the login button$")
+	public void I_click_on_the_login_button() {
+		Assert.assertTrue(slpage.loginBtn.isDisplayed() && slpage.loginBtn.isEnabled());
+		slpage.loginBtn.click();
 	}
 
 }
