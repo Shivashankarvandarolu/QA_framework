@@ -1,5 +1,11 @@
 package pages;
 
-public class LoginPage {
+import io.cucumber.java.en.And;
+import io.cucumber.java.en.Then;
 
+public class LoginPage {
+	
+	
+	
+   
 }

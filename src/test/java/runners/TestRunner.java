@@ -6,7 +6,7 @@ import org.testng.annotations.DataProvider;
 
 @CucumberOptions(
     features = "src/test/resources/features",          // Path to your .feature files
-    glue = { "StepDefinitions", "base" },              // Step definition + hooks packages
+    glue = { "stepDefinitions", "base" },              // Step definition + hooks packages
     plugin = {
         "pretty",                                      // Console output
         "html:target/cucumber-reports/cucumber.html",  // HTML report

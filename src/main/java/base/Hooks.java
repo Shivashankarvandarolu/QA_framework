@@ -9,15 +9,15 @@ public class Hooks {
 
 	@Before
 	public void setUp() {
-		String browser = System.getProperty("browser", "chrome"); // fallback to chrome
+		String browser = System.getProperty("browser", "chrome");
 		WebDriver driver = DriverFactory.initDriver(browser);
 		DriverFactory.setDriver(driver);
-		DriverFactory.getDriver().manage().window().maximize();
+		driver.manage().window().maximize();
 	}
 
 	@After
 	public void tearDown() {
 		DriverFactory.quitDriver();
-		DriverFactory.getDriver().close();
+		// driver.close();
 	}
 }
