@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Failed suite [LoginandSignup Suite]" guice-stage="DEVELOPMENT">
+  <test thread-count="5" name="LoginAndSignupFeatures(failed)">
+    <classes>
+      <class name="runners.TestRunnerLoginandSignup">
+        <methods>
+          <include name="setUpClass"/>
+          <include name="tearDownClass"/>
+          <include name="runScenario" invocation-numbers="0 1"/>
+        </methods>
+      </class> <!-- runners.TestRunnerLoginandSignup -->
+    </classes>
+  </test> <!-- LoginAndSignupFeatures(failed) -->
+</suite> <!-- Failed suite [LoginandSignup Suite] -->
