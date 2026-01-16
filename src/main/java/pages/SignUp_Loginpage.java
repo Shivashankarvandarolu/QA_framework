@@ -5,7 +5,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-
 public class SignUp_Loginpage {
 
 	public WebDriver driver;
@@ -40,4 +39,9 @@ public class SignUp_Loginpage {
 	@FindBy(xpath = "//button[@data-qa='signup-button']")
 	public WebElement signUpBtn;
 
+	@FindBy(xpath = "//p[normalize-space()='Your email or password is incorrect!']")
+	public WebElement inValidEmail_password_validaiton_txt;
+
+	@FindBy(xpath = "//p[normalize-space()='Email Address already exist!']")
+	public WebElement emailAlreadyExist_ValidationTxt;
 }

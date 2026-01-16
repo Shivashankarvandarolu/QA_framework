@@ -29,9 +29,10 @@ import pages.SignupPage;
 
 public class LoginStepDef {
 
-	private WebDriver driver;
+	WebDriver driver = DriverFactory.getDriver();
+
+	// private WebDriver driver;
 	private LoginPage login = new LoginPage();
-	private DriverFactory driverFactory = new DriverFactory();
 	private SignUp_Loginpage slpage = new SignUp_Loginpage(DriverFactory.getDriver());
 	private HomePage home = new HomePage(DriverFactory.getDriver());
 	private SignupPage spage = new SignupPage(DriverFactory.getDriver());
@@ -193,7 +194,7 @@ public class LoginStepDef {
 	@And("^I should be able to see the name '(.+)'$")
 	public void i_should_be_able_to_see_the_name(String expectedName) throws InterruptedException {
 
-		Thread.sleep(1000);
+		Thread.sleep(2000);
 
 		Assert.assertTrue(spage.logoutBtn.isDisplayed());
 
@@ -221,4 +222,46 @@ public class LoginStepDef {
 		slpage.loginBtn.click();
 	}
 
+	@And("^I enter email '(.+)' in log in email address$")
+	public void enterEmailinLoginInemailtextbox(String email) {
+		Assert.assertTrue(slpage.login_email.isDisplayed() && slpage.login_email.isEnabled());
+		slpage.login_email.sendKeys(email);
+	}
+
+	@When("^I log out of the application$")
+	public void i_log_out_of_the_application() {
+		Assert.assertTrue(spage.logoutBtn.isDisplayed() && spage.logoutBtn.isEnabled());
+		spage.logoutBtn.click();
+	}
+
+	@Then("^I should see the Signup/Login page$")
+	public void i_should_see_the_signup_login_page() {
+
+		boolean isLoginVisible = slpage.loginToYourAccount_txt.isDisplayed();
+
+		Assert.assertTrue(isLoginVisible, "Signup/Login page is not displayed");
+	}
+
+	@Then("I should see a login error validation message")
+	public void i_should_see_login_error_message() {
+		boolean validationMessageIsDisplayed = slpage.inValidEmail_password_validaiton_txt.isDisplayed();
+		Assert.assertTrue(validationMessageIsDisplayed,
+				"When User added Invalid password, the Validation message is not displayed");
+	}
+
+	@When("^I am on Login or Sign up Page$")
+	public void i_am_on_login_or_signup_page() {
+
+		String actURL = driver.getCurrentUrl();
+		String expURL = "https://automationexercise.com/login";
+		Assert.assertEquals(expURL, expURL);
+	}
+
+	@Then("^I should see a signup validation text message$")
+	public void verify_signup_validation_text_message() {
+
+		boolean signupvalidationMessageIsDisplayed = slpage.emailAlreadyExist_ValidationTxt.isDisplayed();
+		Assert.assertTrue(signupvalidationMessageIsDisplayed,
+				"When User trying to signup with existing email ID, Signup Validation message is not displayed");
+	}
 }

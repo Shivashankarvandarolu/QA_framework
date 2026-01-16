@@ -14,13 +14,13 @@ import org.testng.annotations.DataProvider;
         "junit:target/cucumber-reports/cucumber.xml"   // JUnit XML report
     },
     monochrome = true,                                 // Cleaner console output
-    tags = "@Registration"                                    // Run only scenarios tagged @smoke==
+    tags = "@smoke"                                    // Run only scenarios tagged @smoke==
 )
 public class TestRunner extends AbstractTestNGCucumberTests {
 
     // Enable parallel execution of scenarios
     @Override
-    @DataProvider(parallel = true)
+    @DataProvider(parallel = false)
     public Object[][] scenarios() {
         return super.scenarios();
     }

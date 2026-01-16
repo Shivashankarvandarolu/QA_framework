@@ -1,9 +1,12 @@
 base\DriverFactory.class
 pages\SignUp_Loginpage.class
 utils\LoggerUtils.class
+base\Hooks.class
 pages\LoginPage.class
+.cucumber\cucumber.glue.tmp
 pages\HomePage.class
+.cucumber\cucumber.stepDefinitions.tmp
 managers\PageObjectManager.class
 utils\ConfigReader.class
-pages\signupPage.class
-base\Basetest.class
+pages\ContactUsPage.class
+pages\SignupPage.class
